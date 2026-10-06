@@ -85,9 +85,10 @@
                 <% } %>
                     <!-- All Reviews Section -->
                     <hr>
-                    <p><b>All Reviews</b></p>
-
+                    
+                    <% if(oneData.reviews.length > 0) { %>
                     <div class="row">
+                        <p><b>All Reviews</b></p>
                         <% for (let review of oneData.reviews) { %>
                             <div class="card col-5 ms-3 mb-3">
                                 <div class="card-body">
@@ -106,6 +107,40 @@
                             </div>
                             <% } %>
                     </div>
+                    <% } %>
 
         </div>
-    </div>
+<!-- MAP -->
+<div class="col-6 offset-3 mt-4 mb-5">
+
+    <h3>Where you'll be</h3>
+
+    <div id="map" style="width: 100%; height: 500px;"></div>
+
+</div>
+
+<!-- MapLibre CSS -->
+<link
+    href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css"
+    rel="stylesheet"
+/>
+
+<!-- MapLibre JS -->
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+
+<!-- Listing data -->
+<script>
+    window.listingCoordinates =
+        <%- JSON.stringify(oneData.geometry.coordinates) %>;
+
+    window.listingTitle =
+        <%- JSON.stringify(oneData.title) %>;
+
+    window.listingLocation =
+        <%- JSON.stringify(oneData.location) %>;
+
+    window.listingId =
+        <%- JSON.stringify(oneData._id) %>;
+</script>
+
+<script src="/js/map.js"></script>

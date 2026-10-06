@@ -8,6 +8,7 @@ console.log("API Secret:", process.env.CLOUD_API_SECRET);
 
 
 const express = require("express");
+const { MongoStore } = require("connect-mongo");
 const app = express();
 const mongoose = require("mongoose");
 const path = require("path");
@@ -25,6 +26,7 @@ const listingsRouter = require("./routes/listing.js")
 const reviewsRouter = require("./routes/review.js")
 const userRouter = require("./routes/user.js");
 
+const dburl = process.env.ATLASDB_URL
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -39,11 +41,23 @@ main()
   .catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/airbnb");
+  await mongoose.connect(dburl);
 }
+const store = MongoStore.create({
+  mongoUrl:dburl,
+  crypto:{
+    secret:process.env.SECRET,
+  },
+  touchAfter:24 * 3600,
+})
+
+store.on("error",(err)=>{
+  console.log("ERROR IN MONGO SESSION",err)
+})
 
 const sessionOption = {
-  secret:"sourabh",
+  store,
+  secret:process.env.SECRET,
   resave:false,
   saveUninitialized:true,
   cookie:{
@@ -53,9 +67,7 @@ const sessionOption = {
   }
 }
 
-app.get("/", (req, res) => {
-  res.send("web route is working go to /listing route");
-});
+
 
 app.use(session(sessionOption))
 app.use(flash())
@@ -88,10 +100,9 @@ app.get("/demouser",async(req,res,next)=>{
 
 //  INDEX Route
 app.use("/listings", listingsRouter)
-
 app.use("/listings/:id/reviews", reviewsRouter)
 app.use("/", userRouter)
-
+ 
 // when no route matches
 app.all(/.*/, (req, res, next) => {
   throw new ExpressError(404, "Page Not Found!");

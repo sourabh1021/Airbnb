@@ -19,7 +19,7 @@ module.exports.saveRedirect = (req,res,next)=>{
     res.locals.redirectUrl = req.session.redirectUrl // then store original in locals so because originall url will delete by paassport
   }
   next()
- }
+}
 
 module.exports.isOwner = async(req,res,next) =>{
    const { id } = req.params;

@@ -23,7 +23,7 @@ router.route("/:id")
 .get(
   wrapAsync(ListingController.showListing))//  SHOW Route
 .put(
-  IsloggedIn,isOwner,validateListing, wrapAsync(ListingController.updateListing))// update
+  IsloggedIn ,upload.single("listing[image]"),isOwner,validateListing, wrapAsync(ListingController.updateListing))// update
 .delete(
   IsloggedIn,isOwner,wrapAsync(ListingController.Deletelisitng)) //delete Rout
 
