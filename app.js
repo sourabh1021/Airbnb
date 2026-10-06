@@ -80,12 +80,12 @@ passport.serializeUser(user.serializeUser()) //Defines what data to store in ses
 passport.deserializeUser(user.deserializeUser())//Defines how to get user back from session
 // =========================================================
 
-app.use((req,res,next)=>{
-  res.locals.success = req.flash("success")
-  res.locals.error = req.flash("error")
-  res.locals.currUser = req.user // store curr user info
-  next()
-})
+app.use((req, res, next) => {
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    res.locals.currUser = req.user || null;
+    next();
+});
 
 // for user
 app.get("/demouser",async(req,res,next)=>{
